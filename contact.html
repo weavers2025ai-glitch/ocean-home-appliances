@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Ocean Home Appliances</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.cwrap{display:grid;grid-template-columns:1fr 1.2fr;gap:26px;align-items:start;padding:34px 0 80px}
+.ccard{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:28px}
+.ccard h3{font-size:20px;margin-bottom:12px}
+.crow{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--line)}
+.crow:last-child{border-bottom:0}
+.crow .ic{font-size:21px}
+.crow b{display:block;font-size:15px}
+.crow span{color:var(--muted);font-size:14px}
+@media(max-width:860px){.cwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <span>📞 <b>+92 334 900 1195</b> &nbsp;·&nbsp; ✉️ weavers2025ai@gmail.com</span>
+  <span>Official warranty · Nationwide delivery across Pakistan</span>
+</div></div>
+<header class="site"><div class="wrap nav-in">
+  <a class="logo" href="index.html"><img src="images/logo-dark.png" alt="Ocean Home Appliances"></a>
+  <nav class="main" id="mainNav">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+    <a href="contact.html" class="active">Contact</a>
+  </nav>
+  <a class="btn" href="shop.html">Shop Now →</a>
+  <button class="burger" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
+</div></header>
+
+<section class="wrap pagehero">
+  <div class="eyebrow">Contact</div>
+  <h1>Talk to the Ocean team</h1>
+  <p>Questions about a model, a price, or delivery? Message us — we reply fast, and we will help you pick the right appliance for your home.</p>
+</section>
+
+<section class="wrap"><div class="cwrap">
+  <div class="ccard"><h3>Contact details</h3>
+    <div class="crow"><span class="ic">📞</span><div><b>Phone</b><span>+92 334 900 1195</span></div></div>
+    <div class="crow"><span class="ic">💬</span><div><b>WhatsApp</b><span>+92 334 900 1195 — fastest reply</span></div></div>
+    <div class="crow"><span class="ic">✉️</span><div><b>Email</b><span>weavers2025ai@gmail.com</span></div></div>
+    <div class="crow"><span class="ic">🕘</span><div><b>Hours</b><span>Monday–Saturday, 9am–8pm (PKT)</span></div></div>
+    <div class="crow"><span class="ic">🚚</span><div><b>Delivery</b><span>Nationwide across Pakistan</span></div></div>
+  </div>
+  <div class="ccard"><h3>Send an enquiry</h3>
+    <form id="cForm">
+      <div class="fld"><label>Your name *</label><input id="cName" required></div>
+      <div class="fld"><label>Phone / WhatsApp *</label><input id="cPhone" required placeholder="+92 …"></div>
+      <div class="fld"><label>Product you are interested in</label>
+        <select id="cProd"><option value="">General enquiry</option></select></div>
+      <div class="fld"><label>Message *</label><textarea id="cMsg" rows="4" required placeholder="Tell us what you need…"></textarea></div>
+      <button class="btn" type="submit" style="width:100%;justify-content:center">Send via WhatsApp →</button>
+      <p style="color:var(--muted);font-size:12.5px;margin-top:10px;text-align:center">This opens WhatsApp with your message ready to send.</p>
+    </form>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="foot-in">
+    <div><a class="logo" href="index.html"><img src="images/logo-light.png" alt="Ocean Home Appliances"></a>
+      <p style="margin-top:14px">Premium home appliances for every Pakistani home — cooling, cooking, laundry and more, with official warranty.</p></div>
+    <div><h4>In The Store</h4><div id="footCats"></div></div>
+    <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="admin/admin.html">Admin</a></div>
+    <div><h4>Get in Touch</h4><p>📞 +92 334 900 1195</p><p>✉️ weavers2025ai@gmail.com</p><p>💬 WhatsApp: +92 334 900 1195</p><p>🕘 Mon–Sat, 9am–8pm</p></div>
+  </div>
+  <div class="foot-bar"><span>© 2026 Ocean Home Appliances. All rights reserved.</span><span>Premium Appliances · Pakistan</span></div>
+</div></footer>
+<script>window.ROOT="";</script>
+<script src="data/products.js"></script>
+<script src="assets/store.js"></script>
+<script>
+const ps=Ocean.products();
+document.getElementById('footCats').innerHTML=[...new Set(ps.map(p=>p.c))].map(c=>`<a href="shop.html#${encodeURIComponent(c)}">${c}</a>`).join('');
+cProd.innerHTML='<option value="">General enquiry</option>'+ps.map(p=>`<option>${p.n}${p.m?' ('+p.m+')':''}</option>`).join('');
+document.getElementById('cForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const s=Ocean.settings();
+  const text="Hello Ocean Home Appliances,\nName: "+cName.value+"\nPhone: "+cPhone.value+(cProd.value?"\nProduct: "+cProd.value:"")+"\nMessage: "+cMsg.value;
+  window.open("https://wa.me/"+s.wa+"?text="+encodeURIComponent(text),"_blank");
+});
+</script>
+</body>
+</html>

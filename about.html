@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Ocean Home Appliances</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <span>📞 <b>+92 334 900 1195</b> &nbsp;·&nbsp; ✉️ weavers2025ai@gmail.com</span>
+  <span>Official warranty · Nationwide delivery across Pakistan</span>
+</div></div>
+<header class="site"><div class="wrap nav-in">
+  <a class="logo" href="index.html"><img src="images/logo-dark.png" alt="Ocean Home Appliances"></a>
+  <nav class="main" id="mainNav">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html" class="active">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a class="btn" href="shop.html">Shop Now →</a>
+  <button class="burger" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
+</div></header>
+
+<section class="wrap pagehero">
+  <div class="eyebrow">About Ocean</div>
+  <h1>Appliances that make home feel like home</h1>
+  <p>Ocean Home Appliances brings together the machines Pakistani families rely on every day — cooling, cooking, laundry and kitchen essentials — chosen for performance, durability and honest value.</p>
+</section>
+
+<section class="wrap sec" style="padding-top:40px">
+  <div class="tiles" style="grid-template-columns:1fr 1fr">
+    <div class="tile" style="grid-template-columns:1fr"><div><h3>❄️ Cooling, perfected</h3><p>Our T3 inverter split ACs are built for extreme Pakistani summers — up to 71% energy savings, self-cleaning, WiFi control and Gold Fin protection, backed by a 10-year compressor warranty. Our copper-motor air coolers pair honeycomb cooling with 60% energy savings.</p></div></div>
+    <div class="tile" style="grid-template-columns:1fr"><div><h3>🍳 Kitchens that work hard</h3><p>From 5-burner stainless cooking ranges with cast-iron grills to 12-litre digital air fryers with 12 presets, Ocean kitchen appliances are made for real family cooking — big, daily and delicious.</p></div></div>
+    <div class="tile" style="grid-template-columns:1fr"><div><h3>🧺 The wider home</h3><p>Refrigerators, freezers, washing machines, water dispensers, microwave ovens, LED TVs and more — one trusted name for the whole home, with official warranties on everything we sell.</p></div></div>
+    <div class="tile" style="grid-template-columns:1fr"><div><h3>🤝 Service that stays</h3><p>We help you choose the right size and model before you buy, deliver nationwide, and stay available on WhatsApp and phone long after your appliance is installed.</p></div></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:70px">
+  <div class="news">
+    <div><h2>Ready to upgrade your home?</h2><p>Browse the full Ocean collection, or message us and tell us what you are looking for — we will recommend the right model for your space and budget.</p></div>
+    <div style="display:flex;gap:9px;flex-wrap:wrap"><a class="btn" href="shop.html">Shop the Collection →</a><a class="btn ghost" href="contact.html">Contact Us</a></div>
+  </div>
+</section>
+
+<footer><div class="wrap">
+  <div class="foot-in">
+    <div><a class="logo" href="index.html"><img src="images/logo-light.png" alt="Ocean Home Appliances"></a>
+      <p style="margin-top:14px">Premium home appliances for every Pakistani home — cooling, cooking, laundry and more, with official warranty.</p></div>
+    <div><h4>In The Store</h4><div id="footCats"></div></div>
+    <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="admin/admin.html">Admin</a></div>
+    <div><h4>Get in Touch</h4><p>📞 +92 334 900 1195</p><p>✉️ weavers2025ai@gmail.com</p><p>💬 WhatsApp: +92 334 900 1195</p><p>🕘 Mon–Sat, 9am–8pm</p></div>
+  </div>
+  <div class="foot-bar"><span>© 2026 Ocean Home Appliances. All rights reserved.</span><span>Premium Appliances · Pakistan</span></div>
+</div></footer>
+<script>window.ROOT="";</script>
+<script src="data/products.js"></script>
+<script src="assets/store.js"></script>
+<script>
+document.getElementById('footCats').innerHTML=[...new Set(Ocean.products().map(p=>p.c))].map(c=>`<a href="shop.html#${encodeURIComponent(c)}">${c}</a>`).join('');
+</script>
+</body>
+</html>

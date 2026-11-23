@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Ocean Home Appliances</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.catalog{display:grid;grid-template-columns:248px 1fr;gap:28px;align-items:start;padding-bottom:80px}
+.side{position:sticky;top:96px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px 18px}
+.side h3{font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:13px}
+.cat-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;border:0;background:none;font-family:inherit;font-size:14.5px;font-weight:600;color:#33505c;border-radius:11px;cursor:pointer;text-align:left}
+.cat-btn:hover{background:var(--mist)}
+.cat-btn.on{background:var(--sea);color:#fff}
+.cat-btn .n{font-size:12px;background:var(--mist);border-radius:99px;padding:2px 9px;font-weight:700}
+.cat-btn.on .n{background:rgba(255,255,255,.2)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;color:var(--muted);font-size:14px;flex-wrap:wrap;gap:10px}
+.toolbar input,.toolbar select{padding:10px 15px;border-radius:99px;border:1.5px solid #cfdfdd;background:#fff;font-family:inherit;font-weight:600}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+@media(max-width:860px){.catalog{grid-template-columns:1fr}.side{position:static}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <span>📞 <b>+92 334 900 1195</b> &nbsp;·&nbsp; ✉️ weavers2025ai@gmail.com</span>
+  <span>Official warranty · Nationwide delivery across Pakistan</span>
+</div></div>
+<header class="site"><div class="wrap nav-in">
+  <a class="logo" href="index.html"><img src="images/logo-dark.png" alt="Ocean Home Appliances"></a>
+  <nav class="main" id="mainNav">
+    <a href="index.html">Home</a>
+    <a href="shop.html" class="active">Shop</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <a class="btn" href="contact.html">Get a Quote →</a>
+  <button class="burger" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
+</div></header>
+
+<section class="wrap pagehero">
+  <div class="eyebrow">The Collection</div>
+  <h1>Shop Ocean appliances</h1>
+  <p>Every product from the Ocean catalogue — plus the wider home range. Tap “View Specs” for full details, or enquire on WhatsApp for today's best price.</p>
+</section>
+
+<section class="wrap" style="padding-top:26px">
+  <div class="catalog">
+    <aside class="side"><h3>Categories</h3><div id="catList"></div>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:16px">Need help choosing? <a href="contact.html" style="color:var(--teal);font-weight:800">Talk to us →</a></p>
+    </aside>
+    <div>
+      <div class="toolbar"><span id="countTxt"></span>
+        <span style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="q" type="search" placeholder="Search products or models…">
+          <select id="sort"><option value="f">Sort: Featured</option><option value="n">Name A–Z</option></select>
+        </span>
+      </div>
+      <div class="shop-grid" id="grid"></div>
+      <p id="empty" style="display:none;color:var(--muted);padding:24px 0">No products match your search.</p>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">
+  <div class="foot-in">
+    <div><a class="logo" href="index.html"><img src="images/logo-light.png" alt="Ocean Home Appliances"></a>
+      <p style="margin-top:14px">Premium home appliances for every Pakistani home — cooling, cooking, laundry and more, with official warranty.</p></div>
+    <div><h4>In The Store</h4><div id="footCats"></div></div>
+    <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="admin/admin.html">Admin</a></div>
+    <div><h4>Get in Touch</h4><p>📞 +92 334 900 1195</p><p>✉️ weavers2025ai@gmail.com</p><p>💬 WhatsApp: +92 334 900 1195</p><p>🕘 Mon–Sat, 9am–8pm</p></div>
+  </div>
+  <div class="foot-bar"><span>© 2026 Ocean Home Appliances. All rights reserved.</span><span>Premium Appliances · Pakistan</span></div>
+</div></footer>
+
+<div class="modal" id="pModal"><div class="modal-card">
+  <div class="mi"><img id="mImg" alt=""></div>
+  <div class="md"><button class="spec" style="float:right;padding:7px 13px" onclick="closeModal()">✕</button>
+    <div class="eyebrow" id="mCat"></div><h2 id="mName"></h2><div id="mModel" style="color:var(--teal);font-weight:800"></div>
+    <ul id="mSpecs"></ul>
+    <a class="btn" id="mWa" target="_blank" rel="noopener">Enquire on WhatsApp →</a>
+    <p style="color:var(--muted);font-size:13px;margin-top:13px" id="mPrice"></p>
+  </div>
+</div></div>
+
+<script>window.ROOT="";</script>
+<script src="data/products.js"></script>
+<script src="assets/store.js"></script>
+<script>
+let cat="All", query="", sort="f";
+if(location.hash){ const h=decodeURIComponent(location.hash.slice(1)); if(h) cat=h; }
+const grid=document.getElementById('grid'), catList=document.getElementById('catList');
+function drawCats(){
+  const ps=Ocean.products();
+  const cats=["All",...new Set(ps.map(p=>p.c))];
+  if(!cats.includes(cat)) cat="All";
+  catList.innerHTML=cats.map(c=>`<button class="cat-btn ${c===cat?'on':''}" data-c="${c}">${c}<span class="n">${c==='All'?ps.length:ps.filter(p=>p.c===c).length}</span></button>`).join('');
+  document.getElementById('footCats').innerHTML=cats.slice(1).map(c=>`<a href="shop.html#${encodeURIComponent(c)}">${c}</a>`).join('');
+}
+function card(p){
+ const ext=(p.img||'').startsWith('http');
+ return `<div class="pcard"><div class="ph"><img class="${ext?'ext':''}" src="${Ocean.img(p)}" alt="${p.n}"><span class="pill${p.f?' hot':''}">${p.f?'Featured':p.c}</span></div>
+ <div class="info"><h3>${p.n}</h3><div class="model">${p.m||''}</div><p class="desc">${p.d||''}</p>
+ <div class="price">${p.price?Ocean.money(p.price):'Price on Request'}<small>Official warranty included</small></div>
+ <div class="acts"><button class="spec" onclick="openModal(${p.id})">View Specs</button><a class="wa" target="_blank" rel="noopener" href="${Ocean.enquire(p)}">WhatsApp</a></div></div></div>`;
+}
+function render(){
+  let ps=Ocean.products().filter(p=>(cat==="All"||p.c===cat)&&(p.n+" "+(p.m||"")+" "+p.c).toLowerCase().includes(query.toLowerCase()));
+  if(sort==="n")ps.sort((a,b)=>a.n.localeCompare(b.n)); else ps.sort((a,b)=>(b.f||0)-(a.f||0));
+  document.getElementById('countTxt').textContent=ps.length+" product"+(ps.length===1?"":"s");
+  document.getElementById('empty').style.display=ps.length?"none":"block";
+  grid.innerHTML=ps.map(card).join('');
+}
+catList.addEventListener('click',e=>{const b=e.target.closest('[data-c]'); if(b){cat=b.dataset.c; drawCats(); render();}});
+document.getElementById('q').addEventListener('input',e=>{query=e.target.value; render();});
+document.getElementById('sort').addEventListener('change',e=>{sort=e.target.value; render();});
+drawCats(); render();
+function openModal(id){
+ const p=Ocean.products().find(x=>x.id===id); if(!p)return;
+ mImg.src=Ocean.img(p); mCat.textContent=p.c; mName.textContent=p.n; mModel.textContent=p.m||'';
+ mSpecs.innerHTML=(p.s||[]).map(s=>`<li>${s}</li>`).join('');
+ mWa.href=Ocean.enquire(p);
+ mPrice.textContent=p.price?('Price: '+Ocean.money(p.price)):'Price on request — message us on WhatsApp for today\u2019s best price.';
+ document.getElementById('pModal').classList.add('open');
+}
+function closeModal(){ document.getElementById('pModal').classList.remove('open'); }
+document.getElementById('pModal').addEventListener('click',e=>{ if(e.target.id==='pModal') closeModal(); });
+</script>
+</body>
+</html>
