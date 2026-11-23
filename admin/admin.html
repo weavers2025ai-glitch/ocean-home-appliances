@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Ocean Home Appliances</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--sea:#07303c;--teal:#2f9e93;--mist:#eef7f6;--ink:#14232b;--muted:#5d707a;--line:#dde8e7}
+body{font-family:'Manrope',sans-serif;background:var(--mist);color:var(--ink)}
+h1,h2,h3{font-family:'Sora',sans-serif;color:var(--sea)}
+button{font-family:inherit;cursor:pointer}
+.gate{max-width:400px;margin:12vh auto;background:#fff;border:1px solid var(--line);border-radius:24px;padding:36px 32px;text-align:center}
+.gate img{height:60px;margin:0 auto 14px}
+.layout{display:grid;grid-template-columns:225px 1fr;min-height:100vh}
+.side{background:var(--sea);color:#fff;padding:24px 16px;position:sticky;top:0;height:100vh}
+.side img{height:46px;background:#fff;border-radius:10px;padding:5px 8px;margin-bottom:20px}
+.side a{display:block;color:#c4dedb;padding:11px 13px;border-radius:11px;font-weight:700;font-size:14.5px;cursor:pointer;margin-bottom:3px}
+.side a.on,.side a:hover{background:rgba(255,255,255,.13);color:#fff}
+.main{padding:28px 30px;max-width:1060px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin:18px 0 26px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:19px}
+.stat b{font-family:'Sora';font-size:30px;display:block;color:var(--sea)}
+.stat span{color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{padding:11px 13px;text-align:left;font-size:14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#e3efee;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:12.5px;font-weight:800;margin-bottom:4px}
+.fld input,.fld textarea,.fld select{width:100%;padding:10px 12px;border:1.5px solid #cfdfdd;border-radius:11px;font-family:inherit;font-size:14px;background:#fff}
+.btn{background:var(--sea);color:#fff;border:0;border-radius:99px;padding:11px 22px;font-weight:800}
+.btn.teal{background:var(--teal)} .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid #cfdfdd}
+.btn.sm{padding:7px 14px;font-size:13px}
+.editor{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin:16px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.hint{font-size:12.5px;color:var(--muted)}
+.thumb{width:56px;height:56px;object-fit:contain;background:#f2f8f7;border-radius:9px}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.side{position:static;height:auto}}
+</style>
+</head>
+<body>
+<div id="gate" class="gate" style="display:none">
+  <img src="../images/logo-dark.png" alt="Ocean Home Appliances">
+  <h2 style="margin-bottom:6px">Admin Panel</h2>
+  <p class="hint" style="margin-bottom:16px">Enter the admin password to continue.</p>
+  <div class="fld"><input type="password" id="pwIn" placeholder="Password" style="text-align:center"></div>
+  <button class="btn teal" style="width:100%" onclick="tryLogin()">Log In</button>
+  <p class="hint" style="margin-top:12px">Default: ocean-admin-2026 (change it in Settings)</p>
+</div>
+
+<div id="app" class="layout" style="display:none">
+  <aside class="side">
+    <img src="../images/logo-light.png" alt="Ocean Home Appliances">
+    <a data-v="dash" class="on">📊 Dashboard</a>
+    <a data-v="prods">📦 Products</a>
+    <a data-v="sets">⚙️ Settings</a>
+    <a data-v="data">💾 Data</a>
+    <a href="../index.html" style="margin-top:16px">← View Website</a>
+    <a onclick="logout()">Log Out</a>
+  </aside>
+  <div class="main" id="view"></div>
+</div>
+
+<script>window.ROOT="../";</script>
+<script src="../data/products.js"></script>
+<script src="../assets/store.js"></script>
+<script>
+const PWK="ocean_admin_pw";
+const getPw=()=>localStorage.getItem(PWK)||"ocean-admin-2026";
+function tryLogin(){ if(pwIn.value===getPw()){ sessionStorage.setItem("ocean_admin","1"); boot(); } else alert("Wrong password"); }
+function logout(){ sessionStorage.removeItem("ocean_admin"); location.reload(); }
+function boot(){ gate.style.display="none"; app.style.display="grid"; show("dash"); }
+if(sessionStorage.getItem("ocean_admin")==="1") boot(); else gate.style.display="block";
+pwIn.addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin()});
+const view=document.getElementById('view');
+document.querySelectorAll('.side a[data-v]').forEach(a=>a.addEventListener('click',()=>{
+  document.querySelectorAll('.side a[data-v]').forEach(x=>x.classList.toggle('on',x===a)); show(a.dataset.v); }));
+const BUILTIN=["images/ac.png","images/cooler.png","images/range.png","images/fridge.png","images/washer.png","images/freezer.png","images/microwave.png","images/dispenser.png","images/iron.png","images/processor.png","images/tv.png","images/geyser.png"];
+const imgSrc=p=>{const s=p.img||""; return (s.startsWith("http")||s.startsWith("data:"))?s:"../"+s;};
+
+function show(v){
+  if(v==="dash"){
+    const ps=Ocean.products();
+    view.innerHTML=`<h2>Dashboard</h2>
+    <div class="cards">
+      <div class="stat"><b>${ps.length}</b><span>Products</span></div>
+      <div class="stat"><b>${new Set(ps.map(p=>p.c)).size}</b><span>Categories</span></div>
+      <div class="stat"><b>${ps.filter(p=>p.f).length}</b><span>Featured</span></div>
+      <div class="stat"><b>${ps.filter(p=>p.price>0).length}</b><span>With Prices</span></div>
+    </div>
+    <p class="hint">Products marked “Price on Request” invite customers to enquire on WhatsApp. Set an Rs. price on any product to show it on the website.</p>`;
+  }
+  if(v==="prods"){
+    const ps=Ocean.products();
+    view.innerHTML=`<h2>Products</h2><p class="hint" style="margin:6px 0 14px">Specs: one feature per line — they appear in the “View Specs” window.</p>
+    <button class="btn teal" onclick="editProd(null)">+ Add Product</button>
+    <div id="edBox"></div>
+    <table style="margin-top:16px"><tr><th></th><th>Name</th><th>Model</th><th>Category</th><th>Price</th><th>★</th><th></th></tr>
+    ${ps.map(p=>`<tr><td><img class="thumb" src="${imgSrc(p)}"></td><td><b>${p.n}</b></td><td>${p.m||''}</td><td>${p.c}</td><td>${p.price?Ocean.money(p.price):'On Request'}</td><td>${p.f?'★':''}</td>
+      <td><button class="btn sm ghost" onclick="editProd(${p.id})">Edit</button> <button class="btn sm ghost" onclick="delProd(${p.id})">Delete</button></td></tr>`).join('')}</table>`;
+  }
+  if(v==="sets"){
+    const s=Ocean.settings();
+    view.innerHTML=`<h2>Settings</h2><div class="editor">
+     <div class="grid2">
+      <div class="fld"><label>WhatsApp number (with country code)</label><input id="sWa" value="${s.wa}"></div>
+      <div class="fld"><label>Display phone</label><input id="sPhone" value="${s.phone}"></div>
+     </div>
+     <div class="fld"><label>Contact email</label><input id="sEmail" value="${s.email}"></div>
+     <div class="fld"><label>Admin password</label><input id="sPw" value="${getPw()}"></div>
+     <button class="btn teal" onclick="saveSets()">Save Settings</button>
+     <p class="hint" style="margin-top:10px">Note: the phone/email printed in the page headers and footers are part of the page design — tell your developer to update those too when the business numbers change.</p></div>`;
+  }
+  if(v==="data"){
+    view.innerHTML=`<h2>Data</h2><div class="editor">
+     <p class="hint" style="margin-bottom:13px">Product edits and settings are stored in this browser. Export a backup before changing devices.</p>
+     <button class="btn" onclick="exportData()">Export Backup (JSON)</button>
+     <label class="btn ghost" style="display:inline-block">Import Backup <input type="file" accept=".json" style="display:none" onchange="importData(this)"></label>
+     <button class="btn ghost" onclick="if(confirm('Reset ALL edits to the built-in catalogue?')){['ocean_override','ocean_settings'].forEach(k=>localStorage.removeItem(k));alert('Reset done');show('dash')}">Reset Everything</button></div>`;
+  }
+}
+function editProd(id){
+  const ps=Ocean.products();
+  const p=id?ps.find(x=>x.id===id):{id:Date.now(),n:"",m:"",c:"Air Conditioners",img:"images/ac.png",price:0,f:0,d:"",s:[]};
+  edBox.innerHTML=`<div class="editor"><h3 style="margin-bottom:13px">${id?'Edit':'Add'} Product</h3>
+   <div class="grid2">
+    <div class="fld"><label>Name</label><input id="pN" value="${(p.n||'').replace(/"/g,'&quot;')}"></div>
+    <div class="fld"><label>Model / Subtitle</label><input id="pM" value="${(p.m||'').replace(/"/g,'&quot;')}"></div>
+    <div class="fld"><label>Category</label><input id="pC" value="${p.c}" list="catDl"><datalist id="catDl">${[...new Set(ps.map(x=>x.c))].map(c=>`<option>${c}</option>`).join('')}</datalist></div>
+    <div class="fld"><label>Price (Rs.) — 0 = Price on Request</label><input id="pP" type="number" min="0" value="${p.price||0}"></div>
+    <div class="fld"><label>Featured</label><select id="pF"><option value="0" ${!p.f?'selected':''}>No</option><option value="1" ${p.f?'selected':''}>Yes ★</option></select></div>
+    <div class="fld"><label>Image — built-in path, URL, or upload below</label><input id="pI" value="${(p.img||'').replace(/"/g,'&quot;')}" list="imgDl"><datalist id="imgDl">${BUILTIN.map(b=>`<option>${b}</option>`).join('')}</datalist></div>
+   </div>
+   <div class="fld"><input type="file" accept="image/*" onchange="upImg(this)"><span class="hint"> Uploading stores the photo inside the product (best for small images).</span></div>
+   <div class="fld"><label>Short description</label><textarea id="pD" rows="2">${p.d||''}</textarea></div>
+   <div class="fld"><label>Specs (one per line)</label><textarea id="pS" rows="6">${(p.s||[]).join('\n')}</textarea></div>
+   <button class="btn teal" onclick="saveProd(${p.id})">Save Product</button>
+   <button class="btn ghost" onclick="show('prods')">Cancel</button></div>`;
+}
+function upImg(inp){ const f=inp.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ pI.value=r.result; }; r.readAsDataURL(f); }
+function saveProd(id){
+  let ps=Ocean.products();
+  const rec={id, n:pN.value.trim(), m:pM.value.trim(), c:pC.value.trim()||"Air Conditioners", price:+pP.value||0, f:+pF.value, img:pI.value.trim(), d:pD.value.trim(), s:pS.value.split('\n').map(x=>x.trim()).filter(Boolean)};
+  const ix=ps.findIndex(x=>x.id===id); if(ix>=0)ps[ix]=rec; else ps.push(rec);
+  Ocean.saveProducts(ps); show('prods');
+}
+function delProd(id){ if(!confirm("Delete this product?"))return; Ocean.saveProducts(Ocean.products().filter(x=>x.id!==id)); show('prods'); }
+function saveSets(){ const s=Ocean.settings(); s.wa=sWa.value.trim(); s.phone=sPhone.value.trim(); s.email=sEmail.value.trim(); Ocean.saveSettings(s); localStorage.setItem(PWK, sPw.value.trim()||getPw()); alert("Settings saved."); }
+function exportData(){
+  const d={}; ["ocean_override","ocean_settings"].forEach(k=>d[k]=localStorage.getItem(k));
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:"application/json"})); a.download="ocean-backup.json"; a.click();
+}
+function importData(inp){ const f=inp.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ try{ const d=JSON.parse(r.result); Object.keys(d).forEach(k=>{ if(d[k]!=null) localStorage.setItem(k,d[k]); }); alert("Backup imported."); show('dash'); }catch(e){ alert("Invalid file"); } }; r.readAsText(f); }
+</script>
+</body>
+</html>
