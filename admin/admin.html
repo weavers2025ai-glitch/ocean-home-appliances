@@ -67,7 +67,7 @@ th{background:#e3efee;font-size:12px;letter-spacing:1px;text-transform:uppercase
 <script src="../assets/store.js"></script>
 <script>
 const PWK="ocean_admin_pw";
-const getPw=()=>localStorage.getItem(PWK)||"ocean-admin-2026";
+const getPw=()=>localStorage.getItem(PWK)||"admin1234";
 function tryLogin(){ if(pwIn.value===getPw()){ sessionStorage.setItem("ocean_admin","1"); boot(); } else alert("Wrong password"); }
 function logout(){ sessionStorage.removeItem("ocean_admin"); location.reload(); }
 function boot(){ gate.style.display="none"; app.style.display="grid"; show("dash"); }
